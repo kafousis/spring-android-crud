@@ -1,18 +1,33 @@
 package com.springcrud.android.model;
 
-import java.util.Set;
+import java.util.List;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.Accessors;
-
-@Getter @Setter @NoArgsConstructor
-@EqualsAndHashCode @ToString @Accessors(chain = true)
 public class Genre {
-    private Long id;
+
     private String name;
-    private Set<Book> books;
+    private List<Book> books;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
+    @Override
+    public String toString() {
+        return "Genre{" +
+                "name='" + name + '\'' +
+                ", books=" + books +
+                '}';
+    }
 }

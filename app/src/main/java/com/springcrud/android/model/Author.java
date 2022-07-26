@@ -1,19 +1,43 @@
 package com.springcrud.android.model;
 
-import java.util.Set;
+import java.util.List;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.Accessors;
-
-@Getter @Setter @NoArgsConstructor
-@EqualsAndHashCode @ToString @Accessors(chain = true)
 public class Author {
-    private Long id;
+
     private String fullName;
     private String country;
-    private Set<Book> books;
+    private List<Book> books;
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
+    @Override
+    public String toString() {
+        return "Author{" +
+                "fullName='" + fullName + '\'' +
+                ", country='" + country + '\'' +
+                ", books=" + books +
+                '}';
+    }
 }

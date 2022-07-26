@@ -10,6 +10,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+
+        // toasty lib needs this
+        maven { url "https://jitpack.io" }
     }
 }
 rootProject.name = "SpringAndroidCrud"

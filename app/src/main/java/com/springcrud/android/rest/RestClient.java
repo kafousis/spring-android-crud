@@ -7,6 +7,7 @@ public class RestClient {
 
     // https://square.github.io/retrofit/
 
+    public static final String LOG_TAG = "RestClient";
     public static final String BASE_URL = "http://192.168.1.10:8080";
 
     private static Retrofit.Builder builder
