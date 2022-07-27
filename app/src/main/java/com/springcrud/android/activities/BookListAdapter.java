@@ -16,6 +16,15 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
 
     private List<Book> books;
 
+    public BookListAdapter(List<Book> books) {
+        this.books = books;
+    }
+
+    public void updateListData(List<Book> books) {
+        this.books = books;
+        notifyDataSetChanged();
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView titleTextView;
 
@@ -29,30 +38,13 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         }
     }
 
-    /**
-     * Initialize the dataset of the Adapter.
-     *
-     * @param books List<Book> containing the data to populate views to be used by RecyclerView.
-     */
-    public BookListAdapter(List<Book> books) {
-        this.books = books;
-    }
-
-    public void updateBookList(List<Book> books) {
-        this.books = books;
-        notifyDataSetChanged();
-    }
-
-    // Create new views (invoked by the layout manager)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_book, viewGroup, false);
-
         return new ViewHolder(view);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
 
@@ -61,7 +53,6 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         viewHolder.getTitleTextView().setText(books.get(position).getTitle());
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return books.size();

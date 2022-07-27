@@ -13,19 +13,19 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/book_title"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:gravity="center"
             android:lines="1"
             cardView:layout_constraintTop_toTopOf="parent"
+            cardView:layout_constraintStart_toStartOf="parent"
             tools:text="@tools:sample/full_names" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

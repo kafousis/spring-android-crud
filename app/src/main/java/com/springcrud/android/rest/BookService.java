@@ -1,8 +1,7 @@
 package com.springcrud.android.rest;
 
 import com.springcrud.android.model.Book;
-
-import java.util.List;
+import com.springcrud.android.model.spring.CollectionResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -20,7 +19,7 @@ public interface BookService {
     Call<Book> create(@Body Book book);
 
     @GET("/api/books")
-    Call<List<Book>> read();
+    Call<CollectionResponse<Book>> read();
 
     @PUT("/api/books/{id}")
     Call<Book> update(@Body Book book, @Path("id") Long id);
