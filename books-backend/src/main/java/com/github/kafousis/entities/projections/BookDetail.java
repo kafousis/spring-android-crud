@@ -20,4 +20,7 @@ public interface BookDetail {
     @Value("#{target.authors.size()}")
     Integer getAuthorsCount();
     Set<Author> getAuthors();
+
+    @Value("#{target.authors.size() == 2 ? target.authors[0].fullName + ', ' + target.authors[1].fullName : target.authors[0].fullName}")
+    String getAllAuthors();
 }

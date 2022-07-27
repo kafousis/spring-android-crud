@@ -18,7 +18,7 @@ public interface BookService {
     @POST("/api/books")
     Call<Book> create(@Body Book book);
 
-    @GET("/api/books")
+    @GET("/api/books?projection=bookDetail")
     Call<CollectionResponse<Book>> read();
 
     @PUT("/api/books/{id}")

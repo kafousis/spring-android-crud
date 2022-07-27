@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Embedded<T> {
 
-    // the other solution is to change the payload name at the backend
+    // the other option is to change the payload name at the backend
     @SerializedName(value = "books", alternate = {"authors", "publishers", "genres"})
     private List<T> collection;
 

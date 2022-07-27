@@ -15,17 +15,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_margin="25dp"
         android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/book_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
             android:lines="1"
             cardView:layout_constraintTop_toTopOf="parent"
             cardView:layout_constraintStart_toStartOf="parent"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            tools:text="@tools:sample/lorem" />
+
+        <TextView
+            android:id="@+id/book_authors"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            cardView:layout_constraintTop_toBottomOf="@+id/book_title"
+            cardView:layout_constraintStart_toStartOf="parent"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
             tools:text="@tools:sample/full_names" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

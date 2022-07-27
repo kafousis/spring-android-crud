@@ -26,15 +26,22 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+
         private final TextView titleTextView;
+        private final TextView allAuthorsTextView;
 
         public ViewHolder(View view) {
             super(view);
             titleTextView = (TextView) view.findViewById(R.id.book_title);
+            allAuthorsTextView = view.findViewById(R.id.book_authors);
         }
 
         public TextView getTitleTextView() {
             return titleTextView;
+        }
+
+        public TextView getAllAuthorsTextView() {
+            return allAuthorsTextView;
         }
     }
 
@@ -51,6 +58,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         viewHolder.getTitleTextView().setText(books.get(position).getTitle());
+        viewHolder.getAllAuthorsTextView().setText(books.get(position).getAllAuthors());
     }
 
     @Override

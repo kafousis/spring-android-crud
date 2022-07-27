@@ -11,6 +11,7 @@ public class Book {
     private Publisher publisher;
     private Genre genre;
     private List<Author> authors;
+    private String allAuthors;
 
     public String getTitle() {
         return title;
@@ -68,6 +69,14 @@ public class Book {
         this.authors = authors;
     }
 
+    public String getAllAuthors() {
+        return allAuthors;
+    }
+
+    public void setAllAuthors(String allAuthors) {
+        this.allAuthors = allAuthors;
+    }
+
     @Override
     public String toString() {
         return "Book{" +
@@ -78,6 +87,7 @@ public class Book {
                 ", publisher=" + publisher +
                 ", genre=" + genre +
                 ", authors=" + authors +
+                ", allAuthors='" + allAuthors + '\'' +
                 '}';
     }
 }
