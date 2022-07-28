@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.springcrud.android">
-
     <!-- Required Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -17,17 +16,22 @@
         android:theme="@style/Theme.SpringAndroidCrud"
         tools:targetApi="31">
         <activity
-            android:name=".activities.BookViewActivity"
-            android:exported="false"
-            android:parentActivityName=".activities.BookListActivity"/>
-        <activity
             android:name=".activities.BookListActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.BookViewActivity"
+            android:parentActivityName=".activities.BookListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.BookEditActivity"
+            android:parentActivityName=".activities.BookViewActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

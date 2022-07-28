@@ -38,6 +38,7 @@ public class BookListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
+        //Log.i("BookListActivity", "onCreate()");
 
         setTitle(R.string.book_list);
 
@@ -50,7 +51,12 @@ public class BookListActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         booksRecyclerView.setLayoutManager(layoutManager);
         booksRecyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //Log.i("BookListActivity", "onResume()");
         loadData();
     }
 
@@ -59,8 +65,6 @@ public class BookListActivity extends AppCompatActivity {
         BookService bookService = RestClient.createService(BookService.class);
         Call<CollectionResponse<Book>> getBooks = bookService.read(BOOK_SIZE);
         progressBar.setVisibility(View.VISIBLE);
-
-        Log.i(RestClient.LOG_TAG, getBooks.request().url().toString());
 
         getBooks.enqueue(new Callback<CollectionResponse<Book>>() {
             @Override
@@ -83,11 +87,5 @@ public class BookListActivity extends AppCompatActivity {
                 Toasty.error(BookListActivity.this, getString(R.string.request_fail), Toast.LENGTH_LONG, true).show();
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadData();
     }
 }

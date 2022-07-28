@@ -2,8 +2,10 @@ package com.springcrud.android.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -40,6 +42,7 @@ public class BookViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_view);
+        //Log.i("BookViewActivity", "onCreate()");
 
         viewLayout = findViewById(R.id.view_layout);
         progressBar = findViewById(R.id.progress_bar);
@@ -53,11 +56,36 @@ public class BookViewActivity extends AppCompatActivity {
         updateBookBtn = findViewById(R.id.update_btn);
         deleteBookBtn = findViewById(R.id.delete_btn);
 
-        setTitle(getIntent().getStringExtra("BOOK_TITLE"));
+        setTitle(R.string.book_view);
 
         Long bookId = getIntent().getLongExtra("BOOK_ID", 0L);
         updateBookBtn.setOnClickListener(v -> bookUpdateClicked(bookId));
         deleteBookBtn.setOnClickListener(v -> bookDeleteClicked(bookId));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //Log.i("BookViewActivity", "onResume()");
+
+        Long bookId = getIntent().getLongExtra("BOOK_ID", 0L);
+        //Log.i("BookViewActivity", "bookId="+ String.valueOf(bookId));
+
+        loadBookDetails(bookId);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // respond to the toolbar back button
+        // with this code when going back onResume() is called, NOT onCreate()
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void loadBookDetails(Long bookId){
 
         BookService bookService = RestClient.createService(BookService.class);
         Call<Book> getBook = bookService.getBookById(bookId);
@@ -101,7 +129,9 @@ public class BookViewActivity extends AppCompatActivity {
     }
 
     private void bookUpdateClicked(Long bookId){
-
+        Intent intent = new Intent(this, BookEditActivity.class);
+        intent.putExtra("BOOK_ID", bookId);
+        startActivity(intent);
     }
 
     private void bookDeleteClicked(Long bookId){
@@ -134,7 +164,6 @@ public class BookViewActivity extends AppCompatActivity {
 
                     // go to list activity
                     finish();
-
                 } else {
                     Toasty.error(BookViewActivity.this, R.string.delete_book_fail, Toast.LENGTH_LONG, true).show();
                 }
@@ -148,5 +177,4 @@ public class BookViewActivity extends AppCompatActivity {
             }
         });
     }
-
 }

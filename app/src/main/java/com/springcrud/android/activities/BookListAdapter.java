@@ -59,7 +59,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_book, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_book_list_item, viewGroup, false);
         return new ViewHolder(view);
     }
 
@@ -68,15 +68,14 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        viewHolder.cardView.setOnClickListener(v -> bookClicked(books.get(position).getId(), books.get(position).getTitle()));
+        viewHolder.cardView.setOnClickListener(v -> bookClicked(books.get(position).getId()));
         viewHolder.getTitleTextView().setText(books.get(position).getTitle());
         viewHolder.getAllAuthorsTextView().setText(books.get(position).getAllAuthors());
     }
 
-    private void bookClicked(Long id, String title) {
+    private void bookClicked(Long bookId) {
         Intent intent = new Intent(context, BookViewActivity.class);
-        intent.putExtra("BOOK_ID", id);
-        intent.putExtra("BOOK_TITLE", title);
+        intent.putExtra("BOOK_ID", bookId);
         context.startActivity(intent);
     }
 
