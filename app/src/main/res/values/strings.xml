@@ -7,10 +7,10 @@
     <string name="book_title">Book Title</string>
     <string name="book_authors">Authors</string>
     <string name="book_genre">Genre</string>
-    <string name="book_total_pages">Total Pages</string>
+    <string name="book_total_pages">Pages</string>
     <string name="book_isbn">ISBN</string>
     <string name="book_publisher_name">Publisher</string>
-    <string name="book_published_year">Published Year</string>
+    <string name="book_published_year">Year</string>
     <string name="load_book_success">Book[id=%1$d] loaded</string>
     <string name="load_book_fail">Book cannot be loaded</string>
     <string name="delete_book_success">Book[id=%1$d] deleted</string>

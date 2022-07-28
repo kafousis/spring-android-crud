@@ -101,7 +101,7 @@ public class BookViewActivity extends AppCompatActivity {
                 viewLayout.setVisibility(View.VISIBLE);
                 if (response.isSuccessful()) {
                     String successMsg = getString(R.string.load_book_success, bookId);
-                    Toasty.success(BookViewActivity.this, successMsg, Toast.LENGTH_LONG, true).show();
+                    Toasty.success(BookViewActivity.this, successMsg, Toast.LENGTH_SHORT, true).show();
                     showBookDetails(response.body());
                 } else {
                     Toasty.error(BookViewActivity.this, R.string.load_book_fail, Toast.LENGTH_LONG, true).show();
@@ -160,7 +160,7 @@ public class BookViewActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
                     String successMsg = getString(R.string.delete_book_success, bookId);
-                    Toasty.success(BookViewActivity.this, successMsg, Toast.LENGTH_LONG, true).show();
+                    Toasty.success(BookViewActivity.this, successMsg, Toast.LENGTH_SHORT, true).show();
 
                     // go to list activity
                     finish();

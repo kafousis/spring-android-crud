@@ -74,7 +74,7 @@ public class BookListActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     bookListAdapter.updateListData(response.body().getEmbedded().getCollection());
                     String successMsg = getString(R.string.load_books_success, response.body().getEmbedded().getCollection().size());
-                    Toasty.success(BookListActivity.this, successMsg, Toast.LENGTH_LONG, true).show();
+                    Toasty.success(BookListActivity.this, successMsg, Toast.LENGTH_SHORT, true).show();
                 } else {
                     Toasty.error(BookListActivity.this, R.string.load_books_fail, Toast.LENGTH_LONG, true).show();
                 }
