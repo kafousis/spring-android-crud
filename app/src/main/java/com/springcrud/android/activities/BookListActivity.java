@@ -57,19 +57,19 @@ public class BookListActivity extends AppCompatActivity {
     private void loadData() {
 
         BookService bookService = RestClient.createService(BookService.class);
-        Call<CollectionResponse<Book>> booksCall = bookService.read(BOOK_SIZE);
+        Call<CollectionResponse<Book>> getBooks = bookService.read(BOOK_SIZE);
         progressBar.setVisibility(View.VISIBLE);
 
-        Log.i(RestClient.LOG_TAG, booksCall.request().url().toString());
+        Log.i(RestClient.LOG_TAG, getBooks.request().url().toString());
 
-        booksCall.enqueue(new Callback<CollectionResponse<Book>>() {
+        getBooks.enqueue(new Callback<CollectionResponse<Book>>() {
             @Override
             public void onResponse(Call<CollectionResponse<Book>> call, Response<CollectionResponse<Book>> response) {
 
                 progressBar.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
                     bookListAdapter.updateListData(response.body().getEmbedded().getCollection());
-                    String successMsg = getString(R.string.load_books_success, response.body().getPage().getSize(), response.body().getPage().getTotalElements());
+                    String successMsg = getString(R.string.load_books_success, response.body().getEmbedded().getCollection().size());
                     Toasty.success(BookListActivity.this, successMsg, Toast.LENGTH_LONG, true).show();
                 } else {
                     Toasty.error(BookListActivity.this, R.string.load_books_fail, Toast.LENGTH_LONG, true).show();
@@ -83,5 +83,11 @@ public class BookListActivity extends AppCompatActivity {
                 Toasty.error(BookListActivity.this, getString(R.string.request_fail), Toast.LENGTH_LONG, true).show();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadData();
     }
 }

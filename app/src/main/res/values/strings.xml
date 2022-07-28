@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">SpringAndroidCrud</string>
     <string name="book_list">Book List</string>
-    <string name="create_book_btn">Create book</string>
-    <string name="load_books_success">%1$d/%2$d books loaded</string>
+    <string name="load_books_success">%1$d books loaded</string>
     <string name="load_books_fail">Books cannot be loaded</string>
     <string name="book_title">Book Title</string>
     <string name="book_authors">Authors</string>
@@ -13,5 +12,15 @@
     <string name="book_published_year">Published Year</string>
     <string name="load_book_success">Book[id=%1$d] loaded</string>
     <string name="load_book_fail">Book cannot be loaded</string>
+    <string name="delete_book_success">Book[id=%1$d] deleted</string>
+    <string name="delete_book_fail">Book cannot be deleted</string>
+    <string name="create_book_btn">Create book</string>
+    <string name="update_book_btn">Update Book</string>
+    <string name="delete_book_btn">Delete Book</string>
     <string name="request_fail">Request failed</string>
+
+    <string name="delete">Delete</string>
+    <string name="delete_dialog_message">Are you sure you want to delete this item?</string>
+    <string name="dialog_option_ok">OK</string>
+    <string name="dialog_option_cancel">Cancel</string>
 </resources>

@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.springcrud.android.R;
 import com.springcrud.android.model.Book;
 import com.springcrud.android.rest.BookService;
@@ -31,6 +33,8 @@ public class BookViewActivity extends AppCompatActivity {
     private TextView isbnTextView;
     private TextView publisherNameTextView;
     private TextView publishedYearTextView;
+    private Button updateBookBtn;
+    private Button deleteBookBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,17 +50,22 @@ public class BookViewActivity extends AppCompatActivity {
         isbnTextView = findViewById(R.id.isbn_text_view);
         publisherNameTextView = findViewById(R.id.publisher_name_text_view);
         publishedYearTextView = findViewById(R.id.published_year_text_view);
+        updateBookBtn = findViewById(R.id.update_btn);
+        deleteBookBtn = findViewById(R.id.delete_btn);
 
         setTitle(getIntent().getStringExtra("BOOK_TITLE"));
 
         Long bookId = getIntent().getLongExtra("BOOK_ID", 0L);
+        updateBookBtn.setOnClickListener(v -> bookUpdateClicked(bookId));
+        deleteBookBtn.setOnClickListener(v -> bookDeleteClicked(bookId));
+
         BookService bookService = RestClient.createService(BookService.class);
-        Call<Book> bookById = bookService.getBookById(bookId);
+        Call<Book> getBook = bookService.getBookById(bookId);
 
         progressBar.setVisibility(View.VISIBLE);
         viewLayout.setVisibility(View.GONE);
 
-        bookById.enqueue(new Callback<Book>() {
+        getBook.enqueue(new Callback<Book>() {
             @Override
             public void onResponse(Call<Book> call, Response<Book> response) {
 
@@ -90,4 +99,54 @@ public class BookViewActivity extends AppCompatActivity {
         publisherNameTextView.setText(book.getPublisher().getName());
         publishedYearTextView.setText(String.valueOf(book.getPublishedYear()));
     }
+
+    private void bookUpdateClicked(Long bookId){
+
+    }
+
+    private void bookDeleteClicked(Long bookId){
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.delete)
+                .setMessage(R.string.delete_dialog_message)
+                .setNegativeButton(getString(R.string.dialog_option_cancel), (dialog, which) -> {})
+                .setPositiveButton(getString(R.string.dialog_option_ok), (dialog, which) -> deleteBook(bookId))
+                .show();
+    }
+
+    private void deleteBook(Long bookId) {
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        updateBookBtn.setEnabled(false);
+        deleteBookBtn.setEnabled(false);
+
+        BookService bookService = RestClient.createService(BookService.class);
+        Call<Void> deleteBook = bookService.delete(bookId);
+
+        deleteBook.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                progressBar.setVisibility(View.GONE);
+                if (response.isSuccessful()) {
+                    String successMsg = getString(R.string.delete_book_success, bookId);
+                    Toasty.success(BookViewActivity.this, successMsg, Toast.LENGTH_LONG, true).show();
+
+                    // go to list activity
+                    finish();
+
+                } else {
+                    Toasty.error(BookViewActivity.this, R.string.delete_book_fail, Toast.LENGTH_LONG, true).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                Log.e(RestClient.LOG_TAG, t.getMessage());
+                Toasty.error(BookViewActivity.this, getString(R.string.request_fail), Toast.LENGTH_LONG, true).show();
+            }
+        });
+    }
+
 }

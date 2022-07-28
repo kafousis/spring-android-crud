@@ -1,10 +1,7 @@
 package com.springcrud.android.activities;
 
-import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,12 +68,12 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        viewHolder.cardView.setOnClickListener(v -> onBookClick(books.get(position).getId(), books.get(position).getTitle()));
+        viewHolder.cardView.setOnClickListener(v -> bookClicked(books.get(position).getId(), books.get(position).getTitle()));
         viewHolder.getTitleTextView().setText(books.get(position).getTitle());
         viewHolder.getAllAuthorsTextView().setText(books.get(position).getAllAuthors());
     }
 
-    private void onBookClick(Long id, String title) {
+    private void bookClicked(Long id, String title) {
         Intent intent = new Intent(context, BookViewActivity.class);
         intent.putExtra("BOOK_ID", id);
         intent.putExtra("BOOK_TITLE", title);
