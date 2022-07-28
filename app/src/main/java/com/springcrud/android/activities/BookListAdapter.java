@@ -1,10 +1,16 @@
-package com.springcrud.android.activities.list;
+package com.springcrud.android.activities;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.springcrud.android.R;
@@ -14,9 +20,11 @@ import java.util.List;
 
 public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHolder> {
 
+    private Context context;
     private List<Book> books;
 
-    public BookListAdapter(List<Book> books) {
+    public BookListAdapter(Context context, List<Book> books) {
+        this.context = context;
         this.books = books;
     }
 
@@ -27,13 +35,19 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
+        private final CardView cardView;
         private final TextView titleTextView;
         private final TextView allAuthorsTextView;
 
         public ViewHolder(View view) {
             super(view);
-            titleTextView = (TextView) view.findViewById(R.id.book_title);
+            cardView = view.findViewById(R.id.book_card);
+            titleTextView = view.findViewById(R.id.book_title);
             allAuthorsTextView = view.findViewById(R.id.book_authors);
+        }
+
+        public CardView getCardView() {
+            return cardView;
         }
 
         public TextView getTitleTextView() {
@@ -57,8 +71,15 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
+        viewHolder.cardView.setOnClickListener(v -> onBookClick(books.get(position).getId()));
         viewHolder.getTitleTextView().setText(books.get(position).getTitle());
         viewHolder.getAllAuthorsTextView().setText(books.get(position).getAllAuthors());
+    }
+
+    private void onBookClick(Long id) {
+        Intent intent = new Intent(context, BookViewActivity.class);
+        intent.putExtra("BOOK_ID", id);
+        context.startActivity(intent);
     }
 
     @Override

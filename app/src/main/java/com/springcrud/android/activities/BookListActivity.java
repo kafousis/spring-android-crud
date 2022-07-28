@@ -1,6 +1,7 @@
 package com.springcrud.android.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,7 +14,6 @@ import android.widget.Toast;
 import es.dmoral.toasty.Toasty;
 
 import com.springcrud.android.R;
-import com.springcrud.android.activities.list.BookListAdapter;
 import com.springcrud.android.model.Book;
 import com.springcrud.android.model.spring.CollectionResponse;
 import com.springcrud.android.rest.BookService;
@@ -39,15 +39,17 @@ public class BookListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
 
+        setTitle(R.string.book_list);
+
         progressBar = findViewById(R.id.progress_bar);
         booksRecyclerView = findViewById(R.id.books_recycler_view);
 
-        bookListAdapter = new BookListAdapter(new ArrayList<>());
+        bookListAdapter = new BookListAdapter(this, new ArrayList<>());
         booksRecyclerView.setAdapter(bookListAdapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         booksRecyclerView.setLayoutManager(layoutManager);
-        //booksRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        booksRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         loadData();
     }

@@ -4,9 +4,18 @@ import java.util.List;
 
 public class Author {
 
+    private Long id;
     private String fullName;
     private String country;
     private List<Book> books;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getFullName() {
         return fullName;

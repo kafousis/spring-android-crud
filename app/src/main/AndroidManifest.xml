@@ -17,6 +17,10 @@
         android:theme="@style/Theme.SpringAndroidCrud"
         tools:targetApi="31">
         <activity
+            android:name=".activities.BookViewActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.BookListActivity"/>
+        <activity
             android:name=".activities.BookListActivity"
             android:exported="true">
             <intent-filter>

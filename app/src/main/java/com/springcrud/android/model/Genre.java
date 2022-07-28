@@ -4,8 +4,17 @@ import java.util.List;
 
 public class Genre {
 
+    private Long id;
     private String name;
     private List<Book> books;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

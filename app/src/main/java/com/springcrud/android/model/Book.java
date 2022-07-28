@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Book {
 
+    private Long id;
     private String title;
     private String isbn;
     private Integer totalPages;
@@ -12,6 +13,14 @@ public class Book {
     private Genre genre;
     private List<Author> authors;
     private String allAuthors;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
