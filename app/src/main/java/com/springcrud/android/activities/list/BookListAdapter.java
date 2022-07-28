@@ -1,4 +1,4 @@
-package com.springcrud.android.activities;
+package com.springcrud.android.activities.list;
 
 import android.view.LayoutInflater;
 import android.view.View;

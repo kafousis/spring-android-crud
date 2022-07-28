@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">SpringAndroidCrud</string>
     <string name="create_book_btn">Create book</string>
-    <string name="load_books_failed">Books cannot be loaded</string>
-    <string name="request_failed">Request failed</string>
+    <string name="load_books_success">%1$d/%2$d books loaded</string>
+    <string name="load_books_fail">Books cannot be loaded</string>
+    <string name="request_fail">Request failed</string>
 </resources>

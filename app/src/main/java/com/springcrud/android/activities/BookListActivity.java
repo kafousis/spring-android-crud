@@ -6,11 +6,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import es.dmoral.toasty.Toasty;
 
 import com.springcrud.android.R;
+import com.springcrud.android.activities.list.BookListAdapter;
 import com.springcrud.android.model.Book;
 import com.springcrud.android.model.spring.CollectionResponse;
 import com.springcrud.android.rest.BookService;
@@ -26,36 +29,56 @@ public class BookListActivity extends AppCompatActivity {
 
     private RecyclerView booksRecyclerView;
     private BookListAdapter bookListAdapter;
+    private ProgressBar progressBar;
+
+    // TODO RecyclerView Pagination
+    private int BOOK_SIZE = 180;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
 
+        progressBar = findViewById(R.id.progress_bar);
         booksRecyclerView = findViewById(R.id.books_recycler_view);
-        booksRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         bookListAdapter = new BookListAdapter(new ArrayList<>());
         booksRecyclerView.setAdapter(bookListAdapter);
 
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        booksRecyclerView.setLayoutManager(layoutManager);
+        //booksRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        loadData();
+    }
+
+    private void loadData() {
+
         BookService bookService = RestClient.createService(BookService.class);
-        Call<CollectionResponse<Book>> readBooksCall = bookService.read();
+        Call<CollectionResponse<Book>> readBooksCall = bookService.read(BOOK_SIZE);
+        progressBar.setVisibility(View.VISIBLE);
+
+        Log.i(RestClient.LOG_TAG, readBooksCall.request().url().toString());
 
         readBooksCall.enqueue(new Callback<CollectionResponse<Book>>() {
             @Override
             public void onResponse(Call<CollectionResponse<Book>> call, Response<CollectionResponse<Book>> response) {
 
+                progressBar.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
                     bookListAdapter.updateListData(response.body().getEmbedded().getCollection());
+                    String successMsg = getString(R.string.load_books_success, response.body().getPage().getSize(), response.body().getPage().getTotalElements());
+                    Toasty.success(BookListActivity.this, successMsg, Toast.LENGTH_LONG, true).show();
                 } else {
-                    Toasty.error(BookListActivity.this, R.string.load_books_failed, Toast.LENGTH_SHORT, true).show();
-
+                    Toasty.error(BookListActivity.this, R.string.load_books_fail, Toast.LENGTH_LONG, true).show();
                 }
             }
 
             @Override
             public void onFailure(Call<CollectionResponse<Book>> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
                 Log.e(RestClient.LOG_TAG, t.getMessage());
-                Toasty.error(BookListActivity.this, getString(R.string.request_failed), Toast.LENGTH_SHORT, true).show();
+                Toasty.error(BookListActivity.this, getString(R.string.request_fail), Toast.LENGTH_LONG, true).show();
             }
         });
     }

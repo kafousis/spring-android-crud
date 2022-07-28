@@ -15,6 +15,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:layout_gravity="bottom|center_horizontal"/>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/create_book_fab"
         android:layout_width="wrap_content"

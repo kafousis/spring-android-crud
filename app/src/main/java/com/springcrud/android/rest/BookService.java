@@ -10,6 +10,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface BookService {
 
@@ -18,8 +19,17 @@ public interface BookService {
     @POST("/api/books")
     Call<Book> create(@Body Book book);
 
+    // -- READ
     @GET("/api/books?projection=bookDetail")
     Call<CollectionResponse<Book>> read();
+
+    @GET("/api/books?projection=bookDetail")
+    Call<CollectionResponse<Book>> read(@Query("size") int size);
+
+    @GET("/api/books?projection=bookDetail")
+    Call<CollectionResponse<Book>> read(@Query("page") int page, @Query("size") int size);
+
+    // --
 
     @PUT("/api/books/{id}")
     Call<Book> update(@Body Book book, @Path("id") Long id);
