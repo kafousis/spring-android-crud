@@ -29,6 +29,9 @@ public interface BookService {
     @GET("/api/books?projection=bookDetail")
     Call<CollectionResponse<Book>> read(@Query("page") int page, @Query("size") int size);
 
+    @GET("/api/books/{id}?projection=bookDetail")
+    Call<Book> getBookById(@Path("id") Long id);
+
     // --
 
     @PUT("/api/books/{id}")
@@ -36,9 +39,4 @@ public interface BookService {
 
     @DELETE("/api/books/{id}")
     Call<Void> delete(@Path("id") Long id);
-
-    // ---
-
-    @GET("/api/books/{id}")
-    Call<Book> getBookById(@Path("id") Long id);
 }
