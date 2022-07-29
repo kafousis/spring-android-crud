@@ -8,11 +8,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.springcrud.android.R;
 import com.springcrud.android.adapters.GenreDropdownAdapter;
 import com.springcrud.android.adapters.PublisherDropdownAdapter;
@@ -32,17 +36,32 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class BookEditActivity extends AppCompatActivity {
+public class BookEditActivity extends AppCompatActivity implements Validator.ValidationListener{
 
     private ProgressBar progressBar;
+
+    @NotEmpty
     private TextInputEditText titleEditText;
+
+    @NotEmpty
     private TextInputEditText authorsEditText1;
     private TextInputEditText authorsEditText2;
+
+    @NotEmpty
     private AutoCompleteTextView genreAutoCompleteTextView;
+
+    @NotEmpty
     private TextInputEditText totalPagesEditText;
+
+    @NotEmpty
     private TextInputEditText isbnEditText;
+
+    @NotEmpty
     private AutoCompleteTextView publisherNameAutoCompleteTextView;
+
+    @NotEmpty
     private TextInputEditText publishedYearEditText;
+
     private Button updateBookBtn;
 
     @Override
@@ -63,8 +82,11 @@ public class BookEditActivity extends AppCompatActivity {
 
         setTitle(R.string.book_edit);
 
-        Long bookId = getIntent().getLongExtra("BOOK_ID", 0L);
-        updateBookBtn.setOnClickListener(v -> bookUpdateClicked(bookId));
+        // fields validation
+        Validator validator = new Validator(this);
+        validator.setValidationListener(this);
+
+        updateBookBtn.setOnClickListener(v -> validator.validate());
     }
 
     @Override
@@ -218,6 +240,26 @@ public class BookEditActivity extends AppCompatActivity {
         publishedYearEditText.setText(String.valueOf(book.getPublishedYear()));
     }
 
-    private void bookUpdateClicked(Long bookId) {
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+
+        for (ValidationError error : errors) {
+            EditText view = (EditText) error.getView();
+            String message = error.getCollatedErrorMessage(this);
+            view.setError(message);
+        }
+
+        // set focus on the first field that has error
+        int position = errors.size()-1;
+        EditText view = (EditText) errors.get(position).getView();
+        view.requestFocus();
+    }
+
+    @Override
+    public void onValidationSucceeded() {
+
+        Long bookId = getIntent().getLongExtra("BOOK_ID", 0L);
+        Toasty.success(BookEditActivity.this, "Validation Succeeded", Toast.LENGTH_LONG, true).show();
+
     }
 }
