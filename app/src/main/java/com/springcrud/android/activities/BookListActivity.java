@@ -14,6 +14,7 @@ import android.widget.Toast;
 import es.dmoral.toasty.Toasty;
 
 import com.springcrud.android.R;
+import com.springcrud.android.adapters.BookListAdapter;
 import com.springcrud.android.model.Book;
 import com.springcrud.android.model.spring.CollectionResponse;
 import com.springcrud.android.rest.BookService;

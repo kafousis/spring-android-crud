@@ -1,4 +1,4 @@
-package com.springcrud.android.activities;
+package com.springcrud.android.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.springcrud.android.R;
+import com.springcrud.android.activities.BookViewActivity;
 import com.springcrud.android.model.Book;
 
 import java.util.List;

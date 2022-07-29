@@ -26,5 +26,7 @@
     <string name="dialog_option_cancel">Cancel</string>
 
     <string name="book_edit">Edit Book</string>
+    <string name="load_genres_fail">Genres cannot be loaded</string>
+    <string name="load_Publishers_fail">Publishers cannot be loaded</string>
 
 </resources>

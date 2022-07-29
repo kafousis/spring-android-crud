@@ -11,6 +11,10 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.23229166666666667" />
         <entry key="app/src/main/res/layout/layout_book.xml" value="0.2980072463768116" />
         <entry key="app/src/main/res/layout/layout_book_form.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/layout_book_list_item.xml" value="0.21302083333333333" />
+        <entry key="app/src/main/res/layout/layout_dropdown_item.xml" value="0.21302083333333333" />
+        <entry key="app/src/main/res/layout/layout_dropdown_text_item.xml" value="0.28958333333333336" />
+        <entry key="app/src/main/res/layout/text_dropdown_item.xml" value="0.28958333333333336" />
       </map>
     </option>
   </component>
