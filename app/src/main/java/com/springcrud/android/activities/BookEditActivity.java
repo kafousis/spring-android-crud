@@ -38,6 +38,10 @@ import retrofit2.Response;
 
 public class BookEditActivity extends AppCompatActivity implements Validator.ValidationListener{
 
+    // get them all - to show in dropdowns
+    private static final int GENRES_SIZE = 30;
+    private static final int PUBLISHERS_SIZE = 50;
+
     private ProgressBar progressBar;
 
     @NotEmpty
@@ -63,6 +67,12 @@ public class BookEditActivity extends AppCompatActivity implements Validator.Val
     private TextInputEditText publishedYearEditText;
 
     private Button updateBookBtn;
+
+    private GenreDropdownAdapter genreDropdownAdapter;
+    private int SELECTED_GENRE_POSITION;
+
+    private PublisherDropdownAdapter publisherDropdownAdapter;
+    private int SELECTED_PUBLISHER_POSITION;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +159,7 @@ public class BookEditActivity extends AppCompatActivity implements Validator.Val
     private void getGenres(Book book) {
 
         GenreService genreService = RestClient.createService(GenreService.class);
-        Call<CollectionResponse<Genre>> getGenres = genreService.read();
+        Call<CollectionResponse<Genre>> getGenres = genreService.read(GENRES_SIZE);
 
         getGenres.enqueue(new Callback<CollectionResponse<Genre>>() {
             @Override
@@ -157,7 +167,7 @@ public class BookEditActivity extends AppCompatActivity implements Validator.Val
 
                 if (response.isSuccessful()) {
                     List<Genre> genres = response.body().getEmbedded().getCollection();
-                    showBookGenres(genres, book.getGenre().getName());
+                    showBookGenres(genres, book.getGenre());
                     getPublishers(book);
                 } else {
                     updateBookBtn.setEnabled(false);
@@ -180,7 +190,7 @@ public class BookEditActivity extends AppCompatActivity implements Validator.Val
     private void getPublishers(Book book) {
 
         PublisherService publisherService = RestClient.createService(PublisherService.class);
-        Call<CollectionResponse<Publisher>> getPublishers = publisherService.read();
+        Call<CollectionResponse<Publisher>> getPublishers = publisherService.read(PUBLISHERS_SIZE);
 
         getPublishers.enqueue(new Callback<CollectionResponse<Publisher>>() {
             @Override
@@ -189,7 +199,7 @@ public class BookEditActivity extends AppCompatActivity implements Validator.Val
                 progressBar.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
                     List<Publisher> publishers = response.body().getEmbedded().getCollection();
-                    showBookPublishers(publishers, book.getPublisher().getName());
+                    showBookPublishers(publishers, book.getPublisher());
                 } else {
                     updateBookBtn.setEnabled(false);
                     Toasty.error(BookEditActivity.this, R.string.load_Publishers_fail, Toast.LENGTH_LONG, true).show();
@@ -206,21 +216,31 @@ public class BookEditActivity extends AppCompatActivity implements Validator.Val
         });
     }
 
-    private void showBookGenres(List<Genre> genres, String bookGenre) {
-        GenreDropdownAdapter genreDropdownAdapter = new GenreDropdownAdapter(this, genres);
+    private void showBookGenres(List<Genre> genres, Genre bookGenre) {
+
+        genreDropdownAdapter = new GenreDropdownAdapter(this, genres);
         genreAutoCompleteTextView.setAdapter(genreDropdownAdapter);
-        genreAutoCompleteTextView.setText(bookGenre);
+
+        genreAutoCompleteTextView.setText(bookGenre.getName());
+        SELECTED_GENRE_POSITION = genreDropdownAdapter.getPosition(bookGenre);
+
         genreAutoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
             genreAutoCompleteTextView.setText(genreDropdownAdapter.getItem(position).getName());
+            SELECTED_GENRE_POSITION = position;
         });
     }
 
-    private void showBookPublishers(List<Publisher> publishers, String bookPublisher) {
-        PublisherDropdownAdapter publisherDropdownAdapter = new PublisherDropdownAdapter(this, publishers);
+    private void showBookPublishers(List<Publisher> publishers, Publisher bookPublisher) {
+
+        publisherDropdownAdapter = new PublisherDropdownAdapter(this, publishers);
         publisherNameAutoCompleteTextView.setAdapter(publisherDropdownAdapter);
-        publisherNameAutoCompleteTextView.setText(bookPublisher);
+
+        publisherNameAutoCompleteTextView.setText(bookPublisher.getName());
+        SELECTED_PUBLISHER_POSITION = publisherDropdownAdapter.getPosition(bookPublisher);
+
         publisherNameAutoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
             publisherNameAutoCompleteTextView.setText(publisherDropdownAdapter.getItem(position).getName());
+            SELECTED_PUBLISHER_POSITION = position;
         });
     }
 
@@ -259,7 +279,21 @@ public class BookEditActivity extends AppCompatActivity implements Validator.Val
     public void onValidationSucceeded() {
 
         Long bookId = getIntent().getLongExtra("BOOK_ID", 0L);
-        Toasty.success(BookEditActivity.this, "Validation Succeeded", Toast.LENGTH_LONG, true).show();
 
+        String title = titleEditText.getText().toString();
+        String author1 = authorsEditText1.getText().toString();
+        String author2 = authorsEditText2.getText().toString();
+        String isbn = isbnEditText.getText().toString();
+        Integer totalPages = Integer.valueOf(totalPagesEditText.getText().toString());
+        Integer publishedYear = Integer.valueOf(publishedYearEditText.getText().toString());
+
+        //Log.i("SELECTED_GENRE_POSITION", String.valueOf(SELECTED_GENRE_POSITION));
+        Genre genre = genreDropdownAdapter.getItem(SELECTED_GENRE_POSITION);
+
+        //Log.i("SELECTED_PUBLISHER_POSITION", String.valueOf(SELECTED_PUBLISHER_POSITION));
+        Publisher publisher = publisherDropdownAdapter.getItem(SELECTED_PUBLISHER_POSITION);
+
+        // TODO handle authors
+        // TODO update book
     }
 }

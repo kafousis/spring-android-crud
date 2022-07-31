@@ -33,7 +33,7 @@ public class BookListActivity extends AppCompatActivity {
     private ProgressBar progressBar;
 
     // TODO RecyclerView Pagination
-    private int BOOK_SIZE = 180;
+    private static final int BOOK_SIZE = 180;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

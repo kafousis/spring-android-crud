@@ -1,6 +1,7 @@
 package com.springcrud.android.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,17 @@ public class GenreDropdownAdapter extends ArrayAdapter<Genre> {
     @Override
     public Genre getItem(int position) {
         return genres.get(position);
+    }
+
+    @Override
+    public int getPosition(@Nullable Genre item) {
+
+        for (Genre genre : genres){
+            if (item.getId().equals(genre.getId())){
+                return genres.indexOf(genre);
+            }
+        }
+        return -1;
     }
 
     @NonNull

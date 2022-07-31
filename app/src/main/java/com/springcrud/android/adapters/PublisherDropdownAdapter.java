@@ -37,6 +37,17 @@ public class PublisherDropdownAdapter extends ArrayAdapter<Publisher> {
         return publishers.get(position);
     }
 
+    @Override
+    public int getPosition(@Nullable Publisher item) {
+
+        for (Publisher publisher : publishers){
+            if (item.getId().equals(publisher.getId())){
+                return publishers.indexOf(publisher);
+            }
+        }
+        return -1;
+    }
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
