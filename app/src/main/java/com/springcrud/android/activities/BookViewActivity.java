@@ -121,10 +121,10 @@ public class BookViewActivity extends AppCompatActivity {
     private void showBookDetails(Book book) {
         titleTextView.setText(book.getTitle());
         authorsTextView.setText(book.getAllAuthors());
-        genreTextView.setText(book.getGenre().getName());
+        genreTextView.setText(book.getGenreDetails().getName());
         totalPagesTextView.setText(String.valueOf(book.getTotalPages()));
         isbnTextView.setText(book.getIsbn());;
-        publisherNameTextView.setText(book.getPublisher().getName());
+        publisherNameTextView.setText(book.getPublisherDetails().getName());
         publishedYearTextView.setText(String.valueOf(book.getPublishedYear()));
     }
 

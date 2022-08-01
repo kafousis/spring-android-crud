@@ -15,7 +15,7 @@
     <string name="load_book_fail">Book cannot be loaded</string>
     <string name="delete_book_success">Book[id=%1$d] deleted</string>
     <string name="delete_book_fail">Book cannot be deleted</string>
-    <string name="create_book_btn">Create book</string>
+    <string name="create_book_btn">Create Book</string>
     <string name="update_book_btn">Update Book</string>
     <string name="delete_book_btn">Delete Book</string>
     <string name="request_fail">Request failed</string>
@@ -26,7 +26,12 @@
     <string name="dialog_option_cancel">Cancel</string>
 
     <string name="book_edit">Edit Book</string>
+    <string name="load_authors_fail">Authors cannot be loaded</string>
     <string name="load_genres_fail">Genres cannot be loaded</string>
     <string name="load_Publishers_fail">Publishers cannot be loaded</string>
+    <string name="duplicated_author_error">Duplicated author</string>
+    <string name="book_author_required">Book author required</string>
+    <string name="book_update_success">Book update succeeded</string>
+    <string name="book_update_fail">Book update failed</string>
 
 </resources>

@@ -9,9 +9,16 @@ public class Book {
     private String isbn;
     private Integer totalPages;
     private Integer publishedYear;
-    private Publisher publisher;
-    private Genre genre;
-    private List<Author> authors;
+
+    // -- association URIs used for POST/PUT
+    private String publisher;
+    private String genre;
+    private List<String> authors;
+
+    // -- projection fields
+    private Publisher publisherDetails;
+    private Genre genreDetails;
+    private List<Author> authorsDetails;
     private String allAuthors;
 
     public Long getId() {
@@ -54,28 +61,52 @@ public class Book {
         this.publishedYear = publishedYear;
     }
 
-    public Publisher getPublisher() {
+    public String getPublisher() {
         return publisher;
     }
 
-    public void setPublisher(Publisher publisher) {
+    public void setPublisher(String publisher) {
         this.publisher = publisher;
     }
 
-    public Genre getGenre() {
+    public String getGenre() {
         return genre;
     }
 
-    public void setGenre(Genre genre) {
+    public void setGenre(String genre) {
         this.genre = genre;
     }
 
-    public List<Author> getAuthors() {
+    public List<String> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(List<Author> authors) {
+    public void setAuthors(List<String> authors) {
         this.authors = authors;
+    }
+
+    public Publisher getPublisherDetails() {
+        return publisherDetails;
+    }
+
+    public void setPublisherDetails(Publisher publisherDetails) {
+        this.publisherDetails = publisherDetails;
+    }
+
+    public Genre getGenreDetails() {
+        return genreDetails;
+    }
+
+    public void setGenreDetails(Genre genreDetails) {
+        this.genreDetails = genreDetails;
+    }
+
+    public List<Author> getAuthorsDetails() {
+        return authorsDetails;
+    }
+
+    public void setAuthorsDetails(List<Author> authorsDetails) {
+        this.authorsDetails = authorsDetails;
     }
 
     public String getAllAuthors() {
@@ -89,13 +120,17 @@ public class Book {
     @Override
     public String toString() {
         return "Book{" +
-                "title='" + title + '\'' +
+                "id=" + id +
+                ", title='" + title + '\'' +
                 ", isbn='" + isbn + '\'' +
                 ", totalPages=" + totalPages +
                 ", publishedYear=" + publishedYear +
-                ", publisher=" + publisher +
-                ", genre=" + genre +
-                ", authors=" + authors +
+                ", publisher='" + publisher + '\'' +
+                ", genre='" + genre + '\'' +
+                ", authors='" + authors + '\'' +
+                ", publisherDetails=" + publisherDetails +
+                ", genreDetails=" + genreDetails +
+                ", authorsDetails=" + authorsDetails +
                 ", allAuthors='" + allAuthors + '\'' +
                 '}';
     }

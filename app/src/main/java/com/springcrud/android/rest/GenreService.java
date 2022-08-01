@@ -10,7 +10,7 @@ import retrofit2.http.Query;
 
 public interface GenreService {
 
-    @GET("/api/genres")
-    Call<CollectionResponse<Genre>> read(@Query("size") int size);
+    @GET("/api/genres?sort=name,asc")
+    Call<CollectionResponse<Genre>> get(@Query("size") int size);
 
 }

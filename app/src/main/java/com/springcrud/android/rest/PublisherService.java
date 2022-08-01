@@ -9,7 +9,7 @@ import retrofit2.http.Query;
 
 public interface PublisherService {
 
-    @GET("/api/publishers")
-    Call<CollectionResponse<Publisher>> read(@Query("size") int size);
+    @GET("/api/publishers?sort=name,asc")
+    Call<CollectionResponse<Publisher>> get(@Query("size") int size);
 
 }

@@ -64,7 +64,7 @@ public class BookListActivity extends AppCompatActivity {
     private void loadData() {
 
         BookService bookService = RestClient.createService(BookService.class);
-        Call<CollectionResponse<Book>> getBooks = bookService.read(BOOK_SIZE);
+        Call<CollectionResponse<Book>> getBooks = bookService.get(BOOK_SIZE);
         progressBar.setVisibility(View.VISIBLE);
 
         getBooks.enqueue(new Callback<CollectionResponse<Book>>() {
