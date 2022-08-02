@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputEditText;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.Length;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.springcrud.android.R;
 import com.springcrud.android.adapters.AuthorDropdownAdapter;
@@ -35,11 +36,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.HTTP;
 
-public class BookEditActivity extends AppCompatActivity implements Validator.ValidationListener{
+public class BookCreateActivity extends AppCompatActivity implements Validator.ValidationListener{
 
     @NotEmpty
     private TextInputEditText titleEditText;
@@ -54,7 +57,7 @@ public class BookEditActivity extends AppCompatActivity implements Validator.Val
     @NotEmpty
     private TextInputEditText totalPagesEditText;
 
-    @NotEmpty
+    @NotEmpty @Length(min = 13, max = 13)
     private TextInputEditText isbnEditText;
 
     @NotEmpty
@@ -63,25 +66,25 @@ public class BookEditActivity extends AppCompatActivity implements Validator.Val
     @NotEmpty
     private TextInputEditText publishedYearEditText;
 
-    private Button updateBookBtn;
+    private Button createBookBtn;
     private ProgressBar progressBar;
 
     private AuthorDropdownAdapter author1_dropdownAdapter;
-    private int SELECTED_AUTHOR_1_POSITION;
+    private int SELECTED_AUTHOR_1_POSITION = -1;
 
     private AuthorDropdownAdapter author2_dropdownAdapter;
-    private int SELECTED_AUTHOR_2_POSITION;
+    private int SELECTED_AUTHOR_2_POSITION = -1;
 
     private GenreDropdownAdapter genreDropdownAdapter;
-    private int SELECTED_GENRE_POSITION;
+    private int SELECTED_GENRE_POSITION = -1;
 
     private PublisherDropdownAdapter publisherDropdownAdapter;
-    private int SELECTED_PUBLISHER_POSITION;
+    private int SELECTED_PUBLISHER_POSITION = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_book_edit);
+        setContentView(R.layout.activity_book_create);
 
         progressBar = findViewById(R.id.progress_bar);
         titleEditText = findViewById(R.id.title_edit_text);
@@ -92,29 +95,26 @@ public class BookEditActivity extends AppCompatActivity implements Validator.Val
         isbnEditText = findViewById(R.id.isbn_edit_text);
         publisherNameAutoCompleteTextView = findViewById(R.id.publisher_name_auto_complete_text_view);
         publishedYearEditText = findViewById(R.id.published_year_edit_text);
-        updateBookBtn = findViewById(R.id.update_btn);
+        createBookBtn = findViewById(R.id.create_btn);
 
-        setTitle(R.string.book_edit);
+        setTitle(R.string.book_create);
 
         // fields validation
         Validator validator = new Validator(this);
         validator.setValidationListener(this);
 
-        updateBookBtn.setOnClickListener(v -> validator.validate());
+        createBookBtn.setOnClickListener(v -> { validator.validate(); });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        Long bookId = getIntent().getLongExtra("BOOK_ID", 0L);
-
-        // 4 chained requests
-        // - a) getBook(bookId)
-        // - b) getAuthors()
-        // - c) getGenres()
-        // - d) getPublishers()
-        getBookById(bookId);
+        // 3 chained requests
+        // - a) getAuthors()
+        // - b) getGenres()
+        // - v) getPublishers()
+        getAuthors();
     }
 
     @Override
@@ -128,39 +128,9 @@ public class BookEditActivity extends AppCompatActivity implements Validator.Val
         return super.onOptionsItemSelected(item);
     }
 
-    private void getBookById(Long bookId){
+    private void getAuthors() {
 
         progressBar.setVisibility(View.VISIBLE);
-
-        BookService bookService = RestClient.createService(BookService.class);
-        Call<Book> getBook = bookService.getBookById(bookId);
-
-        getBook.enqueue(new Callback<Book>() {
-            @Override
-            public void onResponse(Call<Book> call, Response<Book> response) {
-
-                if (response.isSuccessful()) {
-                    Book book = response.body();
-                    showBookDetails(book);
-                    getAuthors(book);
-                } else {
-                    updateBookBtn.setEnabled(false);
-                    progressBar.setVisibility(View.GONE);
-                    Toasty.error(BookEditActivity.this, R.string.load_book_fail, Toast.LENGTH_LONG, true).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Book> call, Throwable t) {
-                updateBookBtn.setEnabled(false);
-                progressBar.setVisibility(View.GONE);
-                Log.e(RestClient.LOG_TAG, t.getMessage());
-                Toasty.error(BookEditActivity.this, getString(R.string.request_fail), Toast.LENGTH_LONG, true).show();
-            }
-        });
-    }
-
-    private void getAuthors(Book book) {
 
         AuthorService authorService = RestClient.createService(AuthorService.class);
         Call<CollectionResponse<Author>> getAuthors = authorService.get(RestClient.AUTHORS_SIZE);
@@ -171,26 +141,26 @@ public class BookEditActivity extends AppCompatActivity implements Validator.Val
 
                 if (response.isSuccessful()) {
                     List<Author> authors = response.body().getEmbedded().getCollection();
-                    showBookAuthors(authors, book.getAuthorsDetails());
-                    getGenres(book);
+                    showAuthors(authors);
+                    getGenres();
                 }else{
-                    updateBookBtn.setEnabled(false);
+                    createBookBtn.setEnabled(false);
                     progressBar.setVisibility(View.GONE);
-                    Toasty.error(BookEditActivity.this, R.string.load_authors_fail, Toast.LENGTH_LONG, true).show();
+                    Toasty.error(BookCreateActivity.this, R.string.load_authors_fail, Toast.LENGTH_LONG, true).show();
                 }
             }
 
             @Override
             public void onFailure(Call<CollectionResponse<Author>> call, Throwable t) {
-                updateBookBtn.setEnabled(false);
+                createBookBtn.setEnabled(false);
                 progressBar.setVisibility(View.GONE);
                 Log.e(RestClient.LOG_TAG, t.getMessage());
-                Toasty.error(BookEditActivity.this, getString(R.string.request_fail), Toast.LENGTH_LONG, true).show();
+                Toasty.error(BookCreateActivity.this, getString(R.string.request_fail), Toast.LENGTH_LONG, true).show();
             }
         });
     }
 
-    private void getGenres(Book book) {
+    private void getGenres() {
 
         GenreService genreService = RestClient.createService(GenreService.class);
         Call<CollectionResponse<Genre>> getGenres = genreService.get(RestClient.GENRES_SIZE);
@@ -201,27 +171,27 @@ public class BookEditActivity extends AppCompatActivity implements Validator.Val
 
                 if (response.isSuccessful()) {
                     List<Genre> genres = response.body().getEmbedded().getCollection();
-                    showBookGenres(genres, book.getGenreDetails());
-                    getPublishers(book);
+                    showGenres(genres);
+                    getPublishers();
                 } else {
-                    updateBookBtn.setEnabled(false);
+                    createBookBtn.setEnabled(false);
                     progressBar.setVisibility(View.GONE);
-                    Toasty.error(BookEditActivity.this, R.string.load_genres_fail, Toast.LENGTH_LONG, true).show();
+                    Toasty.error(BookCreateActivity.this, R.string.load_genres_fail, Toast.LENGTH_LONG, true).show();
                 }
             }
 
             @Override
             public void onFailure(Call<CollectionResponse<Genre>> call, Throwable t) {
-                updateBookBtn.setEnabled(false);
+                createBookBtn.setEnabled(false);
                 progressBar.setVisibility(View.GONE);
                 Log.e(RestClient.LOG_TAG, t.getMessage());
-                Toasty.error(BookEditActivity.this, getString(R.string.request_fail), Toast.LENGTH_LONG, true).show();
+                Toasty.error(BookCreateActivity.this, getString(R.string.request_fail), Toast.LENGTH_LONG, true).show();
             }
         });
 
     }
 
-    private void getPublishers(Book book) {
+    private void getPublishers() {
 
         PublisherService publisherService = RestClient.createService(PublisherService.class);
         Call<CollectionResponse<Publisher>> getPublishers = publisherService.get(RestClient.PUBLISHERS_SIZE);
@@ -233,37 +203,27 @@ public class BookEditActivity extends AppCompatActivity implements Validator.Val
                 progressBar.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
                     List<Publisher> publishers = response.body().getEmbedded().getCollection();
-                    showBookPublishers(publishers, book.getPublisherDetails());
+                    showPublishers(publishers);
                 } else {
-                    updateBookBtn.setEnabled(false);
-                    Toasty.error(BookEditActivity.this, R.string.load_Publishers_fail, Toast.LENGTH_LONG, true).show();
+                    createBookBtn.setEnabled(false);
+                    Toasty.error(BookCreateActivity.this, R.string.load_Publishers_fail, Toast.LENGTH_LONG, true).show();
                 }
             }
 
             @Override
             public void onFailure(Call<CollectionResponse<Publisher>> call, Throwable t) {
-                updateBookBtn.setEnabled(false);
+                createBookBtn.setEnabled(false);
                 progressBar.setVisibility(View.GONE);
                 Log.e(RestClient.LOG_TAG, t.getMessage());
-                Toasty.error(BookEditActivity.this, getString(R.string.request_fail), Toast.LENGTH_LONG, true).show();
+                Toasty.error(BookCreateActivity.this, getString(R.string.request_fail), Toast.LENGTH_LONG, true).show();
             }
         });
     }
 
-    private void showBookDetails(Book book) {
-        titleEditText.setText(book.getTitle());
-        totalPagesEditText.setText(String.valueOf(book.getTotalPages()));
-        isbnEditText.setText(book.getIsbn());
-        publishedYearEditText.setText(String.valueOf(book.getPublishedYear()));
-    }
-
-    private void showBookAuthors(List<Author> authors, List<Author> bookAuthors) {
+    private void showAuthors(List<Author> authors) {
 
         author1_dropdownAdapter = new AuthorDropdownAdapter(this, authors);
         authorsTextView1.setAdapter(author1_dropdownAdapter);
-
-        authorsTextView1.setText(bookAuthors.get(0).getFullName());
-        SELECTED_AUTHOR_1_POSITION = author1_dropdownAdapter.getPosition(bookAuthors.get(0));
 
         authorsTextView1.setOnItemClickListener((parent, view, position, id) -> {
             authorsTextView1.setText(author1_dropdownAdapter.getItem(position).getFullName());
@@ -286,13 +246,8 @@ public class BookEditActivity extends AppCompatActivity implements Validator.Val
         author2_dropdownAdapter = new AuthorDropdownAdapter(this, secondaryAuthors);
         authorsTextView2.setAdapter(author2_dropdownAdapter);
 
-        if (bookAuthors.size() == 2){
-            authorsTextView2.setText(bookAuthors.get(1).getFullName());
-            SELECTED_AUTHOR_2_POSITION = author2_dropdownAdapter.getPosition(bookAuthors.get(1));
-        }else{
-            authorsTextView2.setText(author2_dropdownAdapter.getItem(0).getFullName());
-            SELECTED_AUTHOR_2_POSITION = 0;
-        }
+        authorsTextView2.setText(author2_dropdownAdapter.getItem(0).getFullName());
+        SELECTED_AUTHOR_2_POSITION = 0;
 
         authorsTextView2.setOnItemClickListener((parent, view, position, id) -> {
             authorsTextView2.setText(author2_dropdownAdapter.getItem(position).getFullName());
@@ -300,13 +255,10 @@ public class BookEditActivity extends AppCompatActivity implements Validator.Val
         });
     }
 
-    private void showBookGenres(List<Genre> genres, Genre bookGenre) {
+    private void showGenres(List<Genre> genres) {
 
         genreDropdownAdapter = new GenreDropdownAdapter(this, genres);
         genreAutoCompleteTextView.setAdapter(genreDropdownAdapter);
-
-        genreAutoCompleteTextView.setText(bookGenre.getName());
-        SELECTED_GENRE_POSITION = genreDropdownAdapter.getPosition(bookGenre);
 
         genreAutoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
             genreAutoCompleteTextView.setText(genreDropdownAdapter.getItem(position).getName());
@@ -314,13 +266,10 @@ public class BookEditActivity extends AppCompatActivity implements Validator.Val
         });
     }
 
-    private void showBookPublishers(List<Publisher> publishers, Publisher bookPublisher) {
+    private void showPublishers(List<Publisher> publishers) {
 
         publisherDropdownAdapter = new PublisherDropdownAdapter(this, publishers);
         publisherNameAutoCompleteTextView.setAdapter(publisherDropdownAdapter);
-
-        publisherNameAutoCompleteTextView.setText(bookPublisher.getName());
-        SELECTED_PUBLISHER_POSITION = publisherDropdownAdapter.getPosition(bookPublisher);
 
         publisherNameAutoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
             publisherNameAutoCompleteTextView.setText(publisherDropdownAdapter.getItem(position).getName());
@@ -343,12 +292,10 @@ public class BookEditActivity extends AppCompatActivity implements Validator.Val
         Author author1 = author1_dropdownAdapter.getItem(SELECTED_AUTHOR_1_POSITION);
         Author author2 = author2_dropdownAdapter.getItem(SELECTED_AUTHOR_2_POSITION);
 
-        if (author1.getId().equals(author2.getId())){
+        if (author1.getId().equals(author2.getId())) {
             authorsTextView2.setError(getString(R.string.duplicated_author_error));
             authorsTextView2.requestFocus();
         } else {
-
-            Long bookId = getIntent().getLongExtra("BOOK_ID", 0L);
 
             String title = titleEditText.getText().toString();
             String isbn = isbnEditText.getText().toString();
@@ -362,7 +309,7 @@ public class BookEditActivity extends AppCompatActivity implements Validator.Val
             Author firstAuthor = author1_dropdownAdapter.getItem(SELECTED_AUTHOR_1_POSITION);
             authors.add(firstAuthor);
 
-            if (SELECTED_AUTHOR_2_POSITION > 0) {
+            if (SELECTED_AUTHOR_2_POSITION > 0){
                 Author secondAuthor = author2_dropdownAdapter.getItem(SELECTED_AUTHOR_2_POSITION);
                 authors.add(secondAuthor);
             }
@@ -375,62 +322,61 @@ public class BookEditActivity extends AppCompatActivity implements Validator.Val
 
             // --
 
-            Book updatedBook = new Book();
-            updatedBook.setTitle(title);
-            updatedBook.setIsbn(isbn);
-            updatedBook.setTotalPages(totalPages);
-            updatedBook.setPublishedYear(publishedYear);
+            Book newBook = new Book();
+            newBook.setTitle(title);
+            newBook.setIsbn(isbn);
+            newBook.setTotalPages(totalPages);
+            newBook.setPublishedYear(publishedYear);
 
             String publisherUri = RestClient.BASE_URL + "/api/publishers/" + String.valueOf(publisher.getId());
-            updatedBook.setPublisher(publisherUri);
+            newBook.setPublisher(publisherUri);
 
             String genreUri = RestClient.BASE_URL + "/api/genres/" + String.valueOf(genre.getId());
-            updatedBook.setGenre(genreUri);
+            newBook.setGenre(genreUri);
 
             List<String> authorsUris = new ArrayList<>();
             String author_1_uri = RestClient.BASE_URL + "/api/authors/" + String.valueOf(authors.get(0).getId());
             authorsUris.add(author_1_uri);
 
-            if (authors.size() == 2) {
+            if (authors.size() == 2){
                 String author_2_uri = RestClient.BASE_URL + "/api/authors/" + String.valueOf(authors.get(1).getId());
                 authorsUris.add(author_2_uri);
             }
-            updatedBook.setAuthors(authorsUris);
-            updateBook(updatedBook, bookId);
+            newBook.setAuthors(authorsUris);
+            createBook(newBook);
         }
     }
 
-    private void updateBook(Book updatedBook, Long bookId) {
+    private void createBook(Book updatedBook) {
 
         BookService bookService = RestClient.createService(BookService.class);
-        Call<Book> updateBook = bookService.update(updatedBook, bookId);
+        Call<ResponseBody> createBook = bookService.create(updatedBook);
         progressBar.setVisibility(View.VISIBLE);
 
-        updateBook.enqueue(new Callback<Book>() {
+        createBook.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<Book> call, Response<Book> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 progressBar.setVisibility(View.GONE);
+
                 if (response.isSuccessful()) {
-                    Toasty.success(BookEditActivity.this, R.string.book_update_success, Toast.LENGTH_SHORT, true).show();
+                    Toasty.success(BookCreateActivity.this, R.string.book_create_success, Toast.LENGTH_SHORT, true).show();
+                    finish();
                 }else{
 
                     if (response.code() == 409){
-                        Toasty.error(BookEditActivity.this, R.string.duplcate_title_or_isbn, Toast.LENGTH_LONG, true).show();
+                        Toasty.error(BookCreateActivity.this, R.string.duplcate_title_or_isbn, Toast.LENGTH_LONG, true).show();
                     }else{
-                        Toasty.error(BookEditActivity.this, R.string.book_update_fail, Toast.LENGTH_LONG, true).show();
+                        Toasty.error(BookCreateActivity.this, R.string.book_create_fail, Toast.LENGTH_LONG, true).show();
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<Book> call, Throwable t) {
-
-                t.printStackTrace();
-
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
                 Log.e(RestClient.LOG_TAG, t.getMessage());
-                Toasty.error(BookEditActivity.this, getString(R.string.request_fail), Toast.LENGTH_LONG, true).show();
+                Toasty.error(BookCreateActivity.this, getString(R.string.request_fail), Toast.LENGTH_LONG, true).show();
             }
         });
     }

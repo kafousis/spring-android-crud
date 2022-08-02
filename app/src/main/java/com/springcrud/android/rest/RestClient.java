@@ -13,6 +13,13 @@ public class RestClient {
 
     // https://square.github.io/retrofit/
 
+    public static final int AUTHORS_SIZE = 100;
+    public static final int GENRES_SIZE = 30;
+    public static final int PUBLISHERS_SIZE = 50;
+
+    // TODO RecyclerView Pagination
+    public static final int BOOK_SIZE = 200;
+
     public static final String LOG_TAG = "RestClient";
     public static final String BASE_URL = "http://192.168.1.10:8080";
 

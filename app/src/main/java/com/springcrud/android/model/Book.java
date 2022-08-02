@@ -10,7 +10,7 @@ public class Book {
     private Integer totalPages;
     private Integer publishedYear;
 
-    // -- association URIs used for POST/PUT
+    // -- association URIs used for POST/PUT/PATCH
     private String publisher;
     private String genre;
     private List<String> authors;

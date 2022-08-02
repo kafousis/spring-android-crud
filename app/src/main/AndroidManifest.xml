@@ -25,13 +25,17 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activities.BookCreateActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.BookListActivity" />
+        <activity
             android:name=".activities.BookViewActivity"
-            android:parentActivityName=".activities.BookListActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".activities.BookListActivity" />
         <activity
             android:name=".activities.BookEditActivity"
-            android:parentActivityName=".activities.BookViewActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".activities.BookViewActivity" />
     </application>
 
 </manifest>

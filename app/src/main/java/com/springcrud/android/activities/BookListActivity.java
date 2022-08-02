@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import es.dmoral.toasty.Toasty;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.springcrud.android.R;
 import com.springcrud.android.adapters.BookListAdapter;
 import com.springcrud.android.model.Book;
@@ -32,8 +34,7 @@ public class BookListActivity extends AppCompatActivity {
     private BookListAdapter bookListAdapter;
     private ProgressBar progressBar;
 
-    // TODO RecyclerView Pagination
-    private static final int BOOK_SIZE = 180;
+    private FloatingActionButton createBookBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class BookListActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progress_bar);
         booksRecyclerView = findViewById(R.id.books_recycler_view);
+        createBookBtn = findViewById(R.id.create_book_fab);
 
         bookListAdapter = new BookListAdapter(this, new ArrayList<>());
         booksRecyclerView.setAdapter(bookListAdapter);
@@ -52,6 +54,8 @@ public class BookListActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         booksRecyclerView.setLayoutManager(layoutManager);
         booksRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        createBookBtn.setOnClickListener(v -> bookCreateClicked());
     }
 
     @Override
@@ -64,7 +68,7 @@ public class BookListActivity extends AppCompatActivity {
     private void loadData() {
 
         BookService bookService = RestClient.createService(BookService.class);
-        Call<CollectionResponse<Book>> getBooks = bookService.get(BOOK_SIZE);
+        Call<CollectionResponse<Book>> getBooks = bookService.get(RestClient.BOOK_SIZE);
         progressBar.setVisibility(View.VISIBLE);
 
         getBooks.enqueue(new Callback<CollectionResponse<Book>>() {
@@ -88,5 +92,10 @@ public class BookListActivity extends AppCompatActivity {
                 Toasty.error(BookListActivity.this, getString(R.string.request_fail), Toast.LENGTH_LONG, true).show();
             }
         });
+    }
+
+    private void bookCreateClicked() {
+        Intent intent = new Intent(this, BookCreateActivity.class);
+        startActivity(intent);
     }
 }

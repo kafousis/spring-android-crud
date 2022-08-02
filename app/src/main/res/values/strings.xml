@@ -34,4 +34,9 @@
     <string name="book_update_success">Book update succeeded</string>
     <string name="book_update_fail">Book update failed</string>
 
+    <string name="book_create">Create Book</string>
+    <string name="book_create_success">Book created</string>
+    <string name="book_create_fail">Book creation failed</string>
+    <string name="duplcate_title_or_isbn">Duplicate title or ISBN</string>
+
 </resources>

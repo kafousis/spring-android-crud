@@ -3,6 +3,7 @@ package com.springcrud.android.rest;
 import com.springcrud.android.model.Book;
 import com.springcrud.android.model.spring.CollectionResponse;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -15,8 +16,10 @@ import retrofit2.http.Query;
 
 public interface BookService {
 
+    // if Book is returned instead of ResponseBody, POST response serialization fails
+    // because it returns 201 instead of 200, retrofit may expects empty body
     @POST("/api/books")
-    Call<Book> create(@Body Book book);
+    Call<ResponseBody> create(@Body Book book);
 
     @GET("/api/books?projection=bookDetail&sort=title,asc")
     Call<CollectionResponse<Book>> get(@Query("size") int size);
