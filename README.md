@@ -8,9 +8,7 @@ The Android application makes REST calls to the [Books REST API](https://github.
 - Update existing book
 - Delete existing book
 
-After running Books REST API you have to change the BASE_URL constant at [RestClient class](https://github.com/kafousis/spring-android-crud/blob/main/app/src/main/java/com/springcrud/android/rest/RestClient.java) according to the IP and Port you used to run it.
-
-> If you run the Books REST API locally in your computer, be aware that the Android device should be in the same network.
+> In order for the application to be able to reach the Books REST API, the BASE_URL constant at [RestClient class](https://github.com/kafousis/spring-android-crud/blob/main/app/src/main/java/com/springcrud/android/rest/RestClient.java) should be changed according to the appropriate IP and port. Also, be aware that if the Books REST API runs locally on your computer, the Android device should be in the same network.
 
 ## Software Stack
 - Gradle
